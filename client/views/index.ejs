@@ -74,24 +74,30 @@
         color: #eee;
     }
     </style>
-    <script>
-    function init() {
-        require('./app.js');
-        setTimeout(function() {
-            window.location.assign('http://localhost:3000');
-        }, 2999);
-    }
-    </script>
+
 </head>
 
 <body onload="init()">
     <div class="loading-container">
         <div class="loading"></div>
         <div id="loading-text">
-            Chat
+            Chat Room
         </div>
     </div>
     <h1>Loading.. Please wait..</h1>
+    <script>
+        console.log("hey you");
+    function init() {
+        console.log("ji");
+        require('./app.js');
+        console.log("hey you hihi");
+        setTimeout(function() {
+            window.location.assign('http://localhost:8080');
+        }, 2999);
+        
+    }
+    console.log("hey you boy");
+    </script>
 </body>
 
 </html>
