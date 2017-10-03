@@ -13,9 +13,11 @@ var express = require("express")
 var path = require('path');
 var logger = require('morgan');
 var app = require('./ApplicationInstance');
+var http = require("http").createServer(app);
 var compression = require('compression');
 var mainRoutes = require('./backend/routes/MainRoutes');
 var _ = require("underscore");
+var io = require("socket.io").listen(http);
 /* Server config */
 
 //Server's IP address
@@ -26,7 +28,7 @@ app.set("port", process.env.PORT || 8080);
 
 app.use(logger('dev'));
 app.use(compression());
-app.use(express.static(path.resolve(__dirname,'client')));
+app.use(express.static(path.resolve(__dirname,'client/public')));
 
 app.set('views',__dirname + '/client/views');
 app.engine('html',require('ejs').renderFile);
@@ -49,6 +51,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/',mainRoutes);
 
 //Start the http server at port and IP defined before
-app.listen(app.get("port"), app.get("ipaddr"), function() {
+http.listen(app.get("port"), app.get("ipaddr"), function() {
   console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
 });
