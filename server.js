@@ -15,6 +15,7 @@ var logger = require('morgan');
 var app = require('./ApplicationInstance');
 var compression = require('compression');
 var mainRoutes = require('./backend/routes/MainRoutes');
+var _ = require("underscore");
 /* Server config */
 
 //Server's IP address
