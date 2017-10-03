@@ -3,6 +3,10 @@
  */
 var database = require('../Models/db_model');
 var _ = require("../../node_modules/underscore");
+
+var app = require('../../ApplicationInstance');
+var http = require("http").createServer(app);
+var io = require("socket.io").listen(http);
 module.exports = {
     home:home,
     admin:admin,
