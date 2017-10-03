@@ -18,7 +18,7 @@ function message(req, res){
     var message = req.body.message;
     console.log("yo");
     if(_.isUndefined(message) || _.isEmpty(message.trim())) {
-    return response.json(400, {error: "Message is invalid"});
+    return res.json(400, {error: "Message is invalid"});
   }
 
   //Looks good, let the client know
