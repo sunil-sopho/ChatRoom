@@ -2,11 +2,11 @@
  * Created by Sunil on 3/10/17.
  */
 var database = require('../Models/db_model');
-
+var _ = require("../../node_modules/underscore");
 module.exports = {
     home:home,
     admin:admin,
-    datatransfer:datatransfer
+    message:message
 }
 function home(req,res){
     res.render('index');
@@ -14,15 +14,13 @@ function home(req,res){
 function admin(req, res){
     res.render("admin/admin");
 }
-function datatransfer(req, res){
+function message(req, res){
     var message = req.body.message;
+    console.log("yo");
     if(_.isUndefined(message) || _.isEmpty(message.trim())) {
     return response.json(400, {error: "Message is invalid"});
   }
 
   //Looks good, let the client know
-  response.json(200, {message: "Message received"});
-
-
-    
+  res.json(200, {message: "Message received"});
 }
