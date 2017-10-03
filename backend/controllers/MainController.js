@@ -20,6 +20,9 @@ function message(req, res){
     if(_.isUndefined(message) || _.isEmpty(message.trim())) {
     return res.json(400, {error: "Message is invalid"});
   }
+  var name = req.body.name;
+
+  io.sockets.emit("incomingMessage",{message:message,name:name});
 
   //Looks good, let the client know
   res.json(200, {message: "Message received"});
