@@ -1,10 +1,23 @@
 {
+  "name": "ChatRoom",
+  "version": "1.0.0",
+  "main": "index.ejs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Techno-Byte/ChatRoom.git"
+  },
   "dependencies": {
-    "express": "4.6.1",
+    "express": "^4.14.0",
     "jade": "1.4.2",
+    "compression": "^1.6.2",
+    "cors": "^2.8.1",
+    "morgan": "^1.7.0",
+    "mysql": "2.14.1",
+    "path": "^0.12.7",
     "socket.io": "1.0.6",
     "ejs": "^2.5.7",
     "underscore": "1.6.0",
-    "body-parser": "^1.16.0"
+    "body-parser": "^1.16.0",
+    "q": "^1.5.0"
   }
 }

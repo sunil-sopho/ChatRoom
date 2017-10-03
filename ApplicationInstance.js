@@ -1,0 +1,11 @@
+/*
+created by sunil on 3/10/17.
+ */
+
+var express = require('express');
+var cors = require('cors');
+var app = express();
+app.use(cors());
+module.exports = app;
+
+
