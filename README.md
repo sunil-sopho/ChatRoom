@@ -7,12 +7,12 @@ This README would normally document whatever steps are necessary to get your app
 ### What is this repository for? ###
 
 * ChatRoom Project
-* Version 0.0.1
+* Version 0.0.2
 
 ### How do I get set up? ###
 
 * enter npm install
-* node server.js
+* npm start
 
 ### Contribution guidelines ###
 
