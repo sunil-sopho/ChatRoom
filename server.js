@@ -13,9 +13,10 @@ var express = require("express")
 var path = require('path');
 var logger = require('morgan');
 var app = require('./ApplicationInstance');
+
 var http = require("http").createServer(app);
 var compression = require('compression');
-var mainRoutes = require('./backend/routes/MainRoutes');
+//var mainRoutes = require('./backend/routes/MainRoutes');
 var _ = require("underscore");
 var io = require("socket.io").listen(http);
 /* Server config */
@@ -57,6 +58,39 @@ app.use(bodyParser.urlencoded({extended: true}));
   response.render("index");
 
 });*/
+//app.use('/',mainRoutes);
+
+app.get("/", function(request, response) {
+
+  //Render the view called "index"
+  response.render("index");
+
+});
+app.get("/admin",function(req,res) {
+  res.render("admin/admin")
+});
+//POST method to create a chat message
+app.post("/message", function(request, response) {
+
+  //The request body expects a param named "message"
+  var message = request.body.message;
+
+  //If the message is empty or wasn't sent it's a bad request
+  if(_.isUndefined(message) || _.isEmpty(message.trim())) {
+    return response.json(400, {error: "Message is invalid"});
+  }
+
+  //We also expect the sender's name with the message
+  var name = request.body.name;
+
+  //Let our chatroom know there was a new message
+  io.sockets.emit("incomingMessage", {message: message, name: name});
+
+  //Looks good, let the client know
+  response.json(200, {message: "Message received"});
+
+});
+
 
 io.on("connection", function(socket){
 
@@ -94,7 +128,6 @@ io.on("connection", function(socket){
 
 
 
-app.use('/',mainRoutes);
 
 //Start the http server at port and IP defined before
 http.listen(app.get("port"), app.get("ipaddr"), function() {

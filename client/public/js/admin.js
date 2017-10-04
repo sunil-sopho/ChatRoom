@@ -19,7 +19,7 @@ function init() {
   function updateParticipants(participants) {
    $('#participants').html('');
    for (var i = 0; i < participants.length; i++) {
-      $('#participants').append('<span id="' + participants[i].id + '">;' +
+      $('#participants').append('<span id="' + participants[i].id + '">' +
         participants[i].name + ' ' + (participants[i].id === sessionId ? '(You)' : '') + '<br /></span>');
     }
   }
@@ -29,7 +29,7 @@ function init() {
  event "connect" is emitted. Let's get the session ID and
  log it.
   */
-  console.log("in admin.js socket");
+  //console.log("in admin.js socket");
   socket.on('connect', function () {
     sessionId = socket.io.engine.id;
     console.log('Connected ' + sessionId);
@@ -66,8 +66,10 @@ function init() {
  we'll prepend it to the messages section
   */
   socket.on('incomingMessage', function (data) {
+    console.log("message income");
     var message = data.message;
     var name = data.name;
+    console.log("incomingMessage");
     $('#messages').prepend('<b>' + name + '</b><br />' + message + '<hr />');
   });
 
@@ -92,6 +94,7 @@ function init() {
       dataType: 'json',
       data: JSON.stringify({message: outgoingMessage, name: name})
     });
+    console.log("message sent");
   }
 
   /*
