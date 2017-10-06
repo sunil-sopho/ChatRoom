@@ -10,15 +10,15 @@ var io = require("socket.io").listen(http);
 module.exports = {
     home:home,
     admin:admin,
-   // message:message
+    message:message
 }
 function home(req,res){
-    res.render('admin/admin');
+    res.render('index');
 }
 function admin(req, res){
     res.render("admin/admin");
 }
-/*function message(req, res){
+function message(req, res){
     var message = req.body.message;
     console.log("yo");
     if(_.isUndefined(message) || _.isEmpty(message.trim())) {
@@ -30,4 +30,4 @@ function admin(req, res){
 console.log("fds");
   //Looks good, let the client know
   res.status(200).json({message: "Message received"});
-}*/
+}
