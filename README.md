@@ -7,7 +7,7 @@ This README would normally document whatever steps are necessary to get your app
 ### What is this repository for? ###
 
 * ChatRoom Project
-* Version 0.0.2
+* Version 0.0.3
 
 ### How do I get set up? ###
 
@@ -20,6 +20,8 @@ This README would normally document whatever steps are necessary to get your app
 * Code review
 * allways pull before push to tackle conflict
 * Other guidelines
+
+# CONTRIBUTING #
 
 ### Who do I talk to? ###
 
