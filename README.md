@@ -22,7 +22,8 @@ This README would normally document whatever steps are necessary to get your app
 * Other guidelines
 
 # CONTRIBUTING #
-###Anyone With proper knowledge and will to contibute can contribute to the project. Fork the repository to make local changes the merge it back ###
+* Anyone With proper knowledge and will to contibute can contribute to the project.
+* Fork the repository to make local changes the merge it back.
 
 ### Who do I talk to? ###
 
