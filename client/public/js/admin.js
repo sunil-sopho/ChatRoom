@@ -1,5 +1,5 @@
 function init() {
-  
+
  // var app = require('../../../ApplicationInstance');
 //  var io = require("../../../node_modules/socket.io").listen(app);
 
@@ -33,7 +33,7 @@ function init() {
   socket.on('connect', function () {
     sessionId = socket.io.engine.id;
     console.log('Connected ' + sessionId);
-    socket.emit('newUser', {id: sessionId, name: $('#name').val()});    
+    socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   });
 
    /*
@@ -41,7 +41,7 @@ function init() {
  the participants section and display the connected clients.
  Note we are assigning the sessionId as the span ID.
   */
-  socket.on('newConnection', function (data) {    
+  socket.on('newConnection', function (data) {
     updateParticipants(data.participants);
   });
 
@@ -70,7 +70,20 @@ function init() {
     var message = data.message;
     var name = data.name;
     console.log("incomingMessage");
-    $('#messages').prepend('<b>' + name + '</b><br />' + message + '<hr />');
+    $('#conversation').append(
+      '<div class="row message-body">'+
+        '<div class="col-sm-12 message-main-sender">'+
+          '<div class="sender">'+
+            '<div class="message-text">'+
+              message +
+            '</div>'+
+            '<span class="message-time pull-right">'+
+              'Sun' +
+            '</span>'+
+        '</div>'+
+        '</div>'+
+      '</div>'
+    );
   });
 
   /*
