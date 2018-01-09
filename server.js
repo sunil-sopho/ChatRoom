@@ -45,7 +45,25 @@ app.set("port", process.env.PORT || 8080);
 
 
 
+var ChatSchema = mongoose.Schema({
+  created: Date,
+  content: String,
+  username: String,
+  room: String
+});
 
+var Chat = mongoose.model('Chat',ChatSchema);
+
+app.all('*',function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+  if (req.method == 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
+});
 
 
 /*
@@ -387,11 +405,17 @@ function isLoggedIn(req, res, next) {
 
 io.on("connection", function(socket){
 
+  var defaultroom = 'general';
+  var rooms = ['1','2','3','4','5'];
   /*
     When a new user connects to our server, we expect an event called "newUser"
     and then we'll emit an event called "newConnection" with a list of all
     participants to all connected clients
   */
+  socket.emit('setup',{
+    rooms: rooms
+  });
+  
   socket.on("newUser", function(data) {
     participants.push({id: data.id, name: data.name});
     io.sockets.emit("newConnection", {participants: participants});
