@@ -75,7 +75,7 @@ app.all('*',function(req, res, next) {
   }
 */
 var participants = [];
-var roomnum =0;
+var usernum =0;
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
@@ -183,8 +183,8 @@ app.use(function (req, res, next) {
     // no: set a new cookie
     var randomNumber=Math.random().toString();
     randomNumber=randomNumber.substring(2,randomNumber.length);
-    roomnum++;
-    res.cookie('cookieName',roomnum, { maxAge: 900000, httpOnly: false });
+    usernum++;
+    res.cookie('cookieName',usernum, { maxAge: 900000, httpOnly: false });
     console.log('cookie created successfully');
   } 
   else
@@ -473,7 +473,7 @@ io.on("connection", function(socket){
 
   socket.on("newUser", function(data) {
     data.room = data.room;
-    socket.join(defaultroom);
+    socket.join(data.room);
     participants.push({id: data.id, name: data.name});
     io.sockets.emit("newConnection", {participants: participants,room:data.room});
   });
