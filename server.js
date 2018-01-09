@@ -472,6 +472,10 @@ io.on("connection", function(socket){
   //     io.in(msg.room).emit('message created', msg);
   //   });
   // });
+  socket.on('roomChange',function(data){
+    socket.join(data.room);
+    io.in(data.room).emit("newConnection",{participants:participants,room:data.room});
+  });
 
 });
 
