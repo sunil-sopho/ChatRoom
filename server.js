@@ -21,6 +21,7 @@ var session      = require('express-session');
 var configDB = require('./backend/Models/database.js');
 var http = require("http").createServer(app);
 var compression = require('compression');
+var connection = require('./backend/Models/db_model.js')
 //var mainRoutes = require(__dirname+'/backend/routes/MainRoutes');
 var _ = require("underscore");
 var io = require("socket.io").listen(http);
@@ -51,6 +52,7 @@ var ChatSchema = mongoose.Schema({
   username: String,
   room: String
 });
+
 
 var Chat = mongoose.model('Chat',ChatSchema);
 
@@ -105,9 +107,22 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+var rooms =0; 
 
 
+function createTable(chatstring,id){
+  var query = 'CREATE TABLE IF NOT EXISTS `'+chatstring+'` ( `id` INT(32) NOT NULL , `roomnum` INT(32) NOT NULL) ENGINE = InnoDB;'
+    connection.query(query,function(err,results,fields){
+      getid(chatstring,id);
+    })
+}
 
+function getid(chatstring,id){
+  var query = 'SELECT `roomnum` from '+chatstring+' where `id`= ?';
+  connection.query(query,id,function(err,results,fields){
+    return (results[0].roomnum);
+  })
+}
 /* Server routing */
 
 
@@ -213,7 +228,8 @@ app.use(function (req, res, next) {
     var chatrouter = require('express').Router();
     app.use('/randomChats/',chatrouter);
     chatrouter.route('/:chatstring').get(function(req,res){
-       res.render('admin/admin.ejs');
+        getid(req.params.chatstring,1);
+         res.render('admin/admin.ejs');
       // res.send(req.params.chatstring);
     });
 
