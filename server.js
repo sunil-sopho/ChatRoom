@@ -168,9 +168,10 @@ app.post("/message", function(request, response) {
 
       //We also expect the sender's name with the message
       var name = request.body.name;
-
+console.log("this is really tough")
       //Let our chatroom know there was a new message
-      io.sockets.emit("incomingMessage", {message: message, name: name});
+      console.log(io.sockets.sockets.broadcast);
+      io.sockets.sockets.client['Client'].id.send({message: message, name: name});
 
       //Looks good, let the client know
       response.json(200, {message: "Message received"});

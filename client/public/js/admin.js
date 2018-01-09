@@ -72,8 +72,8 @@ function init() {
     console.log("incomingMessage");
     $('#conversation').append(
       '<div class="row message-body">'+
-        '<div class="col-sm-12 message-main-sender">'+
-          '<div class="sender">'+
+        '<div class="col-sm-12 message-main-receiver">'+
+          '<div class="receiver">'+
             '<div class="message-text">'+
               message +
             '</div>'+
@@ -100,6 +100,7 @@ function init() {
   function sendMessage() {
     var outgoingMessage = $('#outgoingMessage').val();
     var name = $('#name').val();
+    // socket.broadcast.emit("incomingMessage",{message:outgoingMessage});
     $.ajax({
       url:  '/message',
       type: 'POST',
@@ -107,6 +108,20 @@ function init() {
       dataType: 'json',
       data: JSON.stringify({message: outgoingMessage, name: name})
     });
+    $('#conversation').append(
+      '<div class="row message-body">'+
+        '<div class="col-sm-12 message-main-sender">'+
+          '<div class="sender">'+
+            '<div class="message-text">'+
+              outgoingMessage +
+            '</div>'+
+            '<span class="message-time pull-right">'+
+              'Sun' +
+            '</span>'+
+        '</div>'+
+        '</div>'+
+      '</div>'
+    );
     console.log("message sent");
   }
 
