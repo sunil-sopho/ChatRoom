@@ -406,7 +406,7 @@ var rooms = ['1','2','3','4','5'];
 io.on("connection", function(socket){
 
   var defaultroom = 'general';
-  
+
   /* socket.broadcast.to('game').emit('message', 'nice game');
     When a new user connects to our server, we expect an event called "newUser"
     and then we'll emit an event called "newConnection" with a list of all

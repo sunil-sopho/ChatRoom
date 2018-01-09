@@ -3,18 +3,18 @@ function timeNow() {
       h = (d.getHours()<10?'0':'') + d.getHours(),
       mid='am',
       m = (d.getMinutes()<10?'0':'') + d.getMinutes();
-      hours = (h)%24;
-      if(hours==0){
-        hours=12;
-      } else if(hours>12){
-        hours=hours%12;
+      h = (h)%24;
+      if(h==0){
+        h=12;
+      } else if(h>12){
+        h=h%12;
         mid='pm';
       }
   console.log(d);
-  return hours + ':' + m + mid;
+  return h + ':' + m + mid;
 }
 function init() {
-
+  var globalId = "";
  // var app = require('../../../ApplicationInstance');
 //  var io = require("../../../node_modules/socket.io").listen(app);
 
@@ -58,8 +58,10 @@ function init() {
   */
   var room;
   socket.on('newConnection', function (data) {
+    console.log("room switching initiated");
     room = data.room;
-    updateParticipants(data.participants);
+    var id = room + '_' + Math.random().toString(36).substr(2, 9);
+    globalId = id;
   });
 
   /*
@@ -77,9 +79,22 @@ function init() {
   socket.on('nameChanged', function (data) {
     $('#' + data.id).html(data.name + ' ' + (data.id === sessionId ? '(You)' : '') + '<br />');
   });
+  /*
 
   /*
- When receiving a new chat message with the "incomingMessage" event,
+    on click room switch
+  */
+  // Clear Chatroom
+  function clearChat(){
+    $(".message-body").remove();
+  }
+
+
+
+
+
+
+ /*When receiving a new chat message with the "incomingMessage" event,
  we'll prepend it to the messages section
   */
   socket.on('incomingMessage', function (data) {
@@ -109,7 +124,6 @@ function init() {
   socket.on('error', function (reason) {
     console.log('Unable to connect to server', reason);
   });
-
   /*
  "sendMessage" will do a simple ajax POST call to our server with
  whatever message we have in our textarea
@@ -172,6 +186,13 @@ function init() {
   $('#outgoingMessage').on('keyup', outgoingMessageKeyUp);
   $('#name').on('focusout', nameFocusOut);
   $('#send').on('click', sendMessage);
+
+  $(".sideBar-body").click(function(){
+    $(".sideBar-body").removeClass('selected');
+    $(this).addClass('selected');
+    $(this).attr('id',globalId);
+    clearChat();
+  });
 }
 
-$(document).on('ready', init);
+$(document).ready(init);

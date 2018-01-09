@@ -168,6 +168,9 @@ box-shadow: none;
   margin: 0 !important;
   cursor: pointer;
 }
+.sideBar-body.selected {
+  background-color: #f2f2f2 ;
+}
 .sideBar-body:hover {
   background-color: #f2f2f2;
 }
