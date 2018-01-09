@@ -41,11 +41,29 @@ require('./backend/Models/passport')(passport); // pass passport for configurati
 app.set("ipaddr", "127.0.0.1");
 
 //Server's port number
-app.set("port", process.env.PORT || 8080);
+app.set("port", process.env.PORT || 4000);
 
 
 
+var ChatSchema = mongoose.Schema({
+  created: Date,
+  content: String,
+  username: String,
+  room: String
+});
 
+var Chat = mongoose.model('Chat',ChatSchema);
+
+app.all('*',function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+  if (req.method == 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
+});
 
 
 /*
@@ -168,7 +186,6 @@ app.post("/message", function(request, response) {
 
       //We also expect the sender's name with the message
       var name = request.body.name;
-console.log("this is really tough")
       //Let our chatroom know there was a new message
       console.log(io.sockets.sockets.broadcast);
       io.sockets.sockets.client['Client'].id.send({message: message, name: name});
@@ -388,16 +405,30 @@ function isLoggedIn(req, res, next) {
 
 io.on("connection", function(socket){
 
+  var defaultroom = 'general';
+  var rooms = ['1','2','3','4','5'];
   /*
     When a new user connects to our server, we expect an event called "newUser"
     and then we'll emit an event called "newConnection" with a list of all
     participants to all connected clients
   */
+  socket.emit('setup',{
+    rooms: rooms
+  });
+  socket.on('message',function(data){
+    console.log("here in socket message");
+  socket.broadcast.emit("incomingMessage",{message:data.message})
+  });
+
   socket.on("newUser", function(data) {
+    // data.room = defaultroom;
+    // socket.join(defaultroom);
     participants.push({id: data.id, name: data.name});
     io.sockets.emit("newConnection", {participants: participants});
   });
 
+
+  // io.in(defaultroom).emit('newConnection',{participants: participants});
   /*
     When a user changes his name, we are expecting an event called "nameChange"
     and then we'll emit an event called "nameChanged" to all participants with
@@ -417,6 +448,22 @@ io.on("connection", function(socket){
     participants = _.without(participants,_.findWhere(participants, {id: socket.id}));
     io.sockets.emit("userDisconnected", {id: socket.id, sender:"system"});
   });
+
+  //Listens to new chat
+  // socket.on('new message', function(data) {
+  //// Create message
+  //   var newMsg = new Chat({
+  //     username: data.username,
+  //     content: data.message,
+  //     room: data.room.toLowerCase(),
+  //     created: new Date()
+  //   });
+  //   //Save it to database
+  //   newMsg.save(function(err, msg){
+  //     //Send message to those connected in the room
+  //     io.in(msg.room).emit('message created', msg);
+  //   });
+  // });
 
 });
 
