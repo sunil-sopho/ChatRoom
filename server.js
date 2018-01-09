@@ -24,8 +24,8 @@ var compression = require('compression');
 //var mainRoutes = require(__dirname+'/backend/routes/MainRoutes');
 var _ = require("underscore");
 var io = require("socket.io").listen(http);
-
-
+var bcrypt = require('bcrypt-nodejs');
+var salt = bcrypt.genSaltSync(10);
 //configuration ===============================================
 
 // configuration ===============================================================
@@ -174,6 +174,13 @@ app.post("/message", function(request, response) {
         req.logout();
         res.redirect('/');
     });
+    var count = 0;
+    app.get("/getrandomid", function(req,res){
+        var value = bcrypt.hashSync(count,salt);
+        count++;
+        res.send(value);
+    })
+
     app.post("/message", function(request, response) {
 
       //The request body expects a param named "message"
@@ -472,6 +479,10 @@ io.on("connection", function(socket){
   //     io.in(msg.room).emit('message created', msg);
   //   });
   // });
+  socket.on('roomChange',function(data){
+    socket.join(data.room);
+    io.in(data.room).emit("newConnection",{participants:participants,room:data.room});
+  });
 
 });
 
