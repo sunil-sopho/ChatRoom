@@ -401,13 +401,13 @@ function isLoggedIn(req, res, next) {
 // socket io checking connection here
 
 //========================================================================================
-
+var rooms = ['1','2','3','4','5'];
 
 io.on("connection", function(socket){
 
   var defaultroom = 'general';
-  var rooms = ['1','2','3','4','5'];
-  /*
+  
+  /* socket.broadcast.to('game').emit('message', 'nice game');
     When a new user connects to our server, we expect an event called "newUser"
     and then we'll emit an event called "newConnection" with a list of all
     participants to all connected clients
@@ -416,15 +416,23 @@ io.on("connection", function(socket){
     rooms: rooms
   });
   socket.on('message',function(data){
+    console.log(data);
+    var newMsg = new Chat({
+      username: data.username,
+      content: data.message,
+      room: data.room.toLowerCase(),
+      created: new Date()
+    });
+    newMsg.save();
     console.log("here in socket message");
-  socket.broadcast.emit("incomingMessage",{message:data.message})
+  socket.broadcast.to(data.room).emit("incomingMessage",{message:data.message})
   });
 
   socket.on("newUser", function(data) {
-    // data.room = defaultroom;
-    // socket.join(defaultroom);
+    data.room = defaultroom;
+    socket.join(defaultroom);
     participants.push({id: data.id, name: data.name});
-    io.sockets.emit("newConnection", {participants: participants});
+    io.sockets.emit("newConnection", {participants: participants,room:data.room});
   });
 
 
