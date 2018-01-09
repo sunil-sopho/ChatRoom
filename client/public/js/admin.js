@@ -100,13 +100,14 @@ function init() {
   function sendMessage() {
     var outgoingMessage = $('#outgoingMessage').val();
     var name = $('#name').val();
-    $.ajax({
-      url:  '/message',
-      type: 'POST',
-      contentType: 'application/json',
-      dataType: 'json',
-      data: JSON.stringify({message: outgoingMessage, name: name})
-    });
+    socket.emit('message',{message:outgoingMessage});
+    // $.ajax({
+    //   url:  '/message',
+    //   type: 'POST',
+    //   contentType: 'application/json',
+    //   dataType: 'json',
+    //   data: JSON.stringify({message: outgoingMessage, name: name})
+    // });
     console.log("message sent");
   }
 

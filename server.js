@@ -41,7 +41,7 @@ require('./backend/Models/passport')(passport); // pass passport for configurati
 app.set("ipaddr", "127.0.0.1");
 
 //Server's port number
-app.set("port", process.env.PORT || 8080);
+app.set("port", process.env.PORT || 4000);
 
 
 
@@ -186,7 +186,7 @@ app.post("/message", function(request, response) {
 
       //We also expect the sender's name with the message
       var name = request.body.name;
-
+      console.log(name);
       //Let our chatroom know there was a new message
       io.sockets.emit("incomingMessage", {message: message, name: name});
 
@@ -415,12 +415,20 @@ io.on("connection", function(socket){
   socket.emit('setup',{
     rooms: rooms
   });
+  socket.on('message',function(data){
+    console.log("here in socket message");
+  socket.broadcast.emit("incomingMessage",{message:data.message})  
+  });
   
   socket.on("newUser", function(data) {
+    // data.room = defaultroom;
+    // socket.join(defaultroom);
     participants.push({id: data.id, name: data.name});
     io.sockets.emit("newConnection", {participants: participants});
   });
 
+
+  // io.in(defaultroom).emit('newConnection',{participants: participants});
   /*
     When a user changes his name, we are expecting an event called "nameChange"
     and then we'll emit an event called "nameChanged" to all participants with
@@ -440,6 +448,22 @@ io.on("connection", function(socket){
     participants = _.without(participants,_.findWhere(participants, {id: socket.id}));
     io.sockets.emit("userDisconnected", {id: socket.id, sender:"system"});
   });
+
+  //Listens to new chat
+  // socket.on('new message', function(data) {
+  //// Create message
+  //   var newMsg = new Chat({
+  //     username: data.username,
+  //     content: data.message,
+  //     room: data.room.toLowerCase(),
+  //     created: new Date()
+  //   });
+  //   //Save it to database
+  //   newMsg.save(function(err, msg){
+  //     //Send message to those connected in the room
+  //     io.in(msg.room).emit('message created', msg);
+  //   });
+  // });
 
 });
 
