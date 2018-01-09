@@ -1,3 +1,18 @@
+function timeNow() {
+  var d = new Date(),
+      h = (d.getHours()<10?'0':'') + d.getHours(),
+      mid='am',
+      m = (d.getMinutes()<10?'0':'') + d.getMinutes();
+      hours = (h)%24;
+      if(hours==0){
+        hours=12;
+      } else if(hours>12){
+        hours=hours%12;
+        mid='pm';
+      }
+  console.log(d);
+  return hours + ':' + m + mid;
+}
 function init() {
 
  // var app = require('../../../ApplicationInstance');
@@ -78,7 +93,7 @@ function init() {
               message +
             '</div>'+
             '<span class="message-time pull-right">'+
-              'Sun' +
+              timeNow() +
             '</span>'+
         '</div>'+
         '</div>'+
@@ -109,7 +124,7 @@ function init() {
               outgoingMessage +
             '</div>'+
             '<span class="message-time pull-right">'+
-              'Sun' +
+              timeNow() +
             '</span>'+
         '</div>'+
         '</div>'+

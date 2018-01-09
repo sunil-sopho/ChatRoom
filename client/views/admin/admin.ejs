@@ -329,35 +329,9 @@
         <div class="row message" id="conversation">
           <div class="row message-previous">
             <div class="col-sm-12 previous">
-              <a onclick="previous(this)" id="" name="20">
-              Show Previous Message!
+              <a id="">
+              Message you send to this chat are secured with end-to-end encryption
               </a>
-            </div>
-          </div>
-
-          <div class="row message-body">
-            <div class="col-sm-12 message-main-receiver">
-              <div class="receiver">
-                <div class="message-text">
-                 Hi, what are you doing?!
-                </div>
-                <span class="message-time pull-right">
-                  Sun
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="row message-body">
-            <div class="col-sm-12 message-main-sender">
-              <div class="sender">
-                <div class="message-text">
-                  I am doing nothing man!
-                </div>
-                <span class="message-time pull-right">
-                  Sun
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -367,15 +341,11 @@
             <div class="col-sm-1 col-xs-1 reply-emojis">
               <i class="fa fa-smile-o fa-2x"></i>
             </div>
-            <div class="col-sm-9 col-xs-9 reply-main">
+            <div class="col-sm-10 col-xs-10 reply-main">
               <textarea rows="1" cols="50" placeholder="Share something!" maxlength="200" id="outgoingMessage"></textarea>
             </div>
-            <div class="col-sm-1 col-xs-1 reply-recording">
-              <i class="fa fa-microphone fa-2x" aria-hidden="true"></i>
-            </div>
-            <div class="col-sm-1 col-xs-1 reply-send">
-              <i class="fa fa-paper-plane fa-2x" aria-hidden="true"></i>
-              <input type="button" value="Share" disabled id="send">
+            <div class="col-sm-1 col-xs-1 reply-send mx-auto">
+              <i class="fa fa-paper-plane fa-2x" aria-hidden="true" id="send"></i>
             </div>
           </form>
         </div>
@@ -383,7 +353,7 @@
     </div>
     </div>
 
-      <div class="inlineBlock"><span>Your name:
+      <!-- <div class="inlineBlock"><span>Your name:
           <input type="text" value="Anonymous" id="name"></span><br>
         <form id="messageForm">
           <textarea rows="4" cols="50" placeholder="Share something!" maxlength="200" id="outgoingMessage"></textarea>
@@ -394,6 +364,6 @@
         <div id="participants"></div>
       </div>
     </div>
-    <div id="messages"></div>
+    <div id="messages"></div> -->
   </body>
 </html>
