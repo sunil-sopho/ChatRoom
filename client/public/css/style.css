@@ -79,7 +79,7 @@ textarea {
   margin: 0;
   height: 60px;
   width: 100%;
-  background-color: #eee;
+  background-color: #eaeaea;
   z-index: 1000;
 }
 .heading-avatar {
@@ -123,7 +123,7 @@ textarea {
 }
 .heading-dot {
   padding: 0;
-  margin-left: 10px;
+  margin-left: 0px;
 }
 .heading-dot i {
   text-align: right;
@@ -169,7 +169,7 @@ box-shadow: none;
   cursor: pointer;
 }
 .sideBar-body.selected {
-  background-color: #f2f2f2 ;
+  background-color: #e4e6e6 ;
 }
 .sideBar-body:hover {
   background-color: #f2f2f2;
@@ -421,7 +421,28 @@ box-shadow: none;
   text-indent: 5px;
   box-shadow: none;
 }
+@media screen and (min-width:768px){
+  .heading-compose{
+    display: none;
+  }
+}
+@media screen and (max-width:768px){
+  .collapsed{
+    height:0;
+    transition:all 0s ease;
+  }
+  .collapsed .side-one .heading{
+    display: none;
+  }
+}
 @media screen and (max-width: 700px) {
+  .collapsed{
+    height:0;
+    transition:all 0s ease;
+  }
+  .collapsed .side-one .heading{
+    display: none;
+  }
   .app {
     top: 0;
     height: 100%;
@@ -449,11 +470,14 @@ box-shadow: none;
   }
   .heading-dot {
     padding: 5px !important;
-    margin-left: 10px !important;
+    margin-left: 0px !important;
   }
   .heading-dot i {
     color: #fff;
     cursor: pointer;
+  }
+  .side-one{
+
   }
   .sideBar {
     height: calc(100% - 130px);
@@ -498,7 +522,7 @@ box-shadow: none;
     padding: 0 !important;
     margin: 0 !important;
     height: 100%;
-    /*width: 100%;*/
+    width: 100%;
     border-left: 1px solid rgba(0, 0, 0, .08);
     /*overflow-y: auto;*/
   }
