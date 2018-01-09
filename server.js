@@ -481,6 +481,7 @@ io.on("connection", function(socket){
   // });
   socket.on('roomChange',function(data){
     socket.join(data.room);
+    console.log(data.room);
     io.in(data.room).emit("newConnection",{participants:participants,room:data.room});
   });
 

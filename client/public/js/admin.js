@@ -191,6 +191,8 @@ function init() {
     $(".sideBar-body").removeClass('selected');
     $(this).addClass('selected');
     $(this).attr('id',globalId);
+    var roomValue = $(this).attr('id').substr(0,$(this).attr('id').indexOf('_'));
+    socket.emit('roomChange',{room:roomValue});
     clearChat();
   });
 }
