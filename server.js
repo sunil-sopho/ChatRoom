@@ -75,14 +75,19 @@ app.all('*',function(req, res, next) {
   }
 */
 var participants = [];
-
+var roomnum =0;
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
+
+
 //app.use(bodyParser()); // get information from html forms
 
 app.use(compression());
 app.use(express.static(path.resolve(__dirname,'client/public')));
+
+
+
 
 app.set('views',__dirname + '/client/views');
 app.engine('html',require('ejs').renderFile);
@@ -169,17 +174,48 @@ app.post("/message", function(request, response) {
         res.render('admin/admin.ejs');
     })
 
+
+app.use(function (req, res, next) {
+  // check if client sent cookie
+  var cookie = req.cookies.cookieName;
+  if (cookie === undefined)
+  {
+    // no: set a new cookie
+    var randomNumber=Math.random().toString();
+    randomNumber=randomNumber.substring(2,randomNumber.length);
+    roomnum++;
+    res.cookie('cookieName',roomnum, { maxAge: 900000, httpOnly: false });
+    console.log('cookie created successfully');
+  } 
+  else
+  {
+    // yes, cookie was already present 
+    console.log('cookie exists', cookie);
+  } 
+  next(); // <-- important!
+});
+
     // LOGOUT ==============================
     app.get('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
     });
+
+    // return a random string to be used
     var count = 0;
-    app.get("/getrandomid", function(req,res){
+    app.post("/getrandomid", function(req,res){
         var value = bcrypt.hashSync(count,salt);
         count++;
         res.send(value);
-    })
+    });
+
+    //
+    var chatrouter = require('express').Router();
+    app.use('/randomChats/',chatrouter);
+    chatrouter.route('/:chatstring').get(function(req,res){
+       res.render('admin/admin.ejs');
+      // res.send(req.params.chatstring);
+    });
 
     app.post("/message", function(request, response) {
 
@@ -436,7 +472,7 @@ io.on("connection", function(socket){
   });
 
   socket.on("newUser", function(data) {
-    data.room = defaultroom;
+    data.room = data.room;
     socket.join(defaultroom);
     participants.push({id: data.id, name: data.name});
     io.sockets.emit("newConnection", {participants: participants,room:data.room});

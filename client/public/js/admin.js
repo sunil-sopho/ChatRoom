@@ -28,7 +28,39 @@ function init() {
   var socket = io.connect(serverBaseUrl);
 
   //We'll save our session ID in a variable for later
-  var sessionId = '';
+var sessionId = '';
+
+
+
+(function(){
+ console.log("onload");
+   getCookie("cookieName");
+}());
+
+function getCookie(cname) {
+    var allcookies = document.cookie;
+    var arrayb = allcookies.split(";");
+    console.log(arrayb);
+    // return null;
+    for (item in arrayb) {
+        if (arrayb[item].startsWith("cookieName")){
+            // var c=item.substr(5);
+            var id = arrayb[item].substr(11);
+            socket.on('connect', function () {
+            sessionId = socket.io.engine.id;
+            console.log(id+'Connected ' + sessionId);
+            socket.emit('newUser', {room:id,id: sessionId, name: $('#name').val()});
+          });
+        }
+    }
+}
+
+
+
+
+
+
+  
 
   //Helper function to update the participants' list
   function updateParticipants(participants) {
@@ -45,11 +77,11 @@ function init() {
  log it.
   */
   //console.log("in admin.js socket");
-  socket.on('connect', function () {
-    sessionId = socket.io.engine.id;
-    console.log('Connected ' + sessionId);
-    socket.emit('newUser', {room:null,id: sessionId, name: $('#name').val()});
-  });
+  // socket.on('connect', function () {
+  //   sessionId = socket.io.engine.id;
+  //   console.log('Connected ' + sessionId);
+  //   socket.emit('newUser', {room:null,id: sessionId, name: $('#name').val()});
+  // });
 
    /*
  When the server emits the "newConnection" event, we'll reset
