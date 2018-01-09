@@ -188,6 +188,9 @@ app.post("/message", function(request, response) {
     app.get('/admin',isLoggedIn,function(req,res){
         res.render('admin/admin.ejs');
     })
+    app.get('/anonymous',function(req,res){
+        res.render('anonymous/anonymous.ejs');
+    })
 
 
 app.use(function (req, res, next) {
@@ -201,12 +204,12 @@ app.use(function (req, res, next) {
     usernum++;
     res.cookie('cookieName',usernum, { maxAge: 900000, httpOnly: false });
     console.log('cookie created successfully');
-  } 
+  }
   else
   {
-    // yes, cookie was already present 
+    // yes, cookie was already present
     console.log('cookie exists', cookie);
-  } 
+  }
   next(); // <-- important!
 });
 

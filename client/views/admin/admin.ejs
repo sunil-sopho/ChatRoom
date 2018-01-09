@@ -20,7 +20,7 @@
   <body>
     <div class="container-fluid app">
     <div class="row app-one">
-      <div class="col-sm-4 side">
+      <div class="col-sm-4 side collapsed">
         <div class="side-one">
           <div class="row heading">
             <div class="col-sm-3 col-xs-3 heading-avatar">
@@ -105,13 +105,16 @@
               <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
             </div>
           </div>
-          <div class="col-sm-8 col-xs-7 heading-name">
+          <div class="col-sm-8 col-xs-6 heading-name">
             <a class="heading-name-meta" id="">John Doe
             </a>
             <span class="heading-online">Online</span>
           </div>
           <div class="col-sm-1 col-xs-1  heading-dot pull-right">
             <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+          </div>
+          <div class="col-sm-1 col-md-0 col-xs-2 heading-compose pull-right">
+            <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true"></i>
           </div>
         </div>
 
@@ -154,5 +157,10 @@
       </div>
     </div>
     <div id="messages"></div> -->
+    <script type="text/javascript">
+      $(".heading-compose").click(function(){
+        $(".side").toggleClass("collapsed");
+      });
+    </script>
   </body>
 </html>
