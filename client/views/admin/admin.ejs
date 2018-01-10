@@ -28,9 +28,6 @@
                 <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
               </div>
             </div>
-            <div class="col-sm-1 col-xs-1  heading-dot  pull-right">
-              <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
-            </div>
             <div class="col-sm-2 col-xs-2 heading-compose  pull-right">
               <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true"></i>
             </div>
@@ -117,6 +114,12 @@
             <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true"></i>
           </div>
         </div>
+        <div class="sideBlock">
+          <ul class="options">
+            <a href="/profile"><li>My Profile</li></a>
+            <a href="/logout"><li>Logout</li></a>
+          </ul>
+        </div>
 
         <div class="row message" id="conversation">
           <div class="row message-previous">
@@ -130,7 +133,7 @@
 
         <div class="row reply">
           <form id="messageForm">
-            <div class="col-sm-1 col-xs-1 reply-emojis">
+            <div class="col-sm-1 col-xs-1 reply-emojis" id="emoji-panel-container">
               <i class="fa fa-smile-o fa-2x"></i>
             </div>
             <div class="col-sm-10 col-xs-10 reply-main">
@@ -160,6 +163,9 @@
     <script type="text/javascript">
       $(".heading-compose").click(function(){
         $(".side").toggleClass("collapsed");
+      });
+      $(".heading-dot").click(function(){
+        $(".sideBlock").toggleClass("sideBlock-active");
       });
     </script>
   </body>

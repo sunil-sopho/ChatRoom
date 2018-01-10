@@ -4,18 +4,46 @@
     <title>Node Authentication</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/profile.css">
     <style>
         body         { padding-top:80px; word-wrap:break-word; }
     </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script
+          src="https://code.jquery.com/jquery-2.2.4.min.js"
+          integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+          crossorigin="anonymous"></script>
 </head>
 <body background="/assets/gear.jpg">
+  <div class="container generateIdBlock" id="">
+    <span class="closeBtn pull-right"><i class="fa fa-times"></i></span>
+    <h2 class="text-center">Generated Links</h2>
+    <div class="row generatedLinksBlock">
+      <ul class="generatedLinksList">
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+        <li class="generatedLink">netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css</li>
+      </ul>
+    </div>
+    <div class="btn btn-primary generateBtn">
+      Generate New Link
+    </div>
+  </div>
 <div class="container">
 
-    <div class="page-header text-center">
+    <div class="page-header text-center clearfix">
         <h1 style="color: white"><span class="fa fa-anchor" style="color:white" ></span> Profile Page</h1>
-        <a href="/admin" style="text-align: left"  class = "btn btn-default btn-sm">Messages </a>
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-        
+        <a href="/logout" class="btn btn-default btn-sm pull-right">Logout</a>
+        <a href="/admin" style="text-align: left"  class = "btn btn-default btn-sm pull-right">Messages </a>
+        <a class="btn btn-default btn-sm pull-right" id="generateBlockToggle">Generate Address</a>
       </div>
 
     <div class="row">
@@ -31,7 +59,7 @@
                         <strong>email</strong>: <%= user.local.email %><br>
                         <strong>password</strong>: <%= user.local.password %>
                     </p>
-                    
+
                     <a href="/unlink/local" class="btn btn-default">Unlink</a>
                 <% } else { %>
                     <a href="/connect/local" class="btn btn-default">Connect Local</a>
@@ -108,10 +136,17 @@
     </div>
 
     <div class="text-center">
-        
+
     </div>
 
 </div>
+<script type="text/javascript">
+  $("#generateBlockToggle").click(function(){
+    $(".generateIdBlock").toggleClass("active");
+  });
+  $(".closeBtn").click(function(){
+    $(".generateIdBlock").toggleClass("active");
+  });
+</script>
 </body>
 </html>
-
