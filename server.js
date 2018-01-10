@@ -107,20 +107,42 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-var rooms =0; 
+var rooms=0; 
 
 
-function createTable(chatstring,id){
+function createTable(chatstring,id,res){
   var query = 'CREATE TABLE IF NOT EXISTS `'+chatstring+'` ( `id` INT(32) NOT NULL , `roomnum` INT(32) NOT NULL) ENGINE = InnoDB;'
     connection.query(query,function(err,results,fields){
-      getid(chatstring,id);
+      getid(chatstring,id,res);
     })
 }
 
-function getid(chatstring,id){
+function getid(chatstring,id,res){
   var query = 'SELECT `roomnum` from '+chatstring+' where `id`= ?';
   connection.query(query,id,function(err,results,fields){
-    return (results[0].roomnum);
+    console.log(results);
+    if(results===undefined)
+    {
+      console.log("in if"+rooms)
+        connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values (`'+id+'` ,`'+rooms+'`)',function(err,results,fields){
+        console.log("in if connection"+rooms);
+        rooms++;
+        res.json(rooms-1);
+      });
+    }
+    else if(Object.keys(results).length==0){
+      console.log("in else if"+rooms)
+        connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values (`'+id+'` ,`'+rooms+'`)',function(err,results,fields){
+          console.log("in else if connection"+rooms);
+        rooms++;
+        res.json(rooms-1);
+    });
+    }
+  else
+  {
+    console.log("results here"+id);
+    res.json(results[0].roomnum);  
+  }
   })
 }
 /* Server routing */
@@ -188,9 +210,8 @@ app.post("/message", function(request, response) {
     app.get('/admin',isLoggedIn,function(req,res){
         res.render('admin/admin.ejs');
     })
-    app.get('/anonymous',function(req,res){
-        res.render('anonymous/anonymous.ejs');
-    })
+
+
 
 
 app.use(function (req, res, next) {
@@ -231,30 +252,12 @@ app.use(function (req, res, next) {
     var chatrouter = require('express').Router();
     app.use('/randomChats/',chatrouter);
     chatrouter.route('/:chatstring').get(function(req,res){
-        getid(req.params.chatstring,1);
-         res.render('admin/admin.ejs');
+       res.render('anonymous/anonymous.ejs',{chatstring:req.params.chatstring});
       // res.send(req.params.chatstring);
     });
 
-    app.post("/message", function(request, response) {
-
-      //The request body expects a param named "message"
-      var message = request.body.message;
-
-      //If the message is empty or wasn't sent it's a bad request
-      if(_.isUndefined(message) || _.isEmpty(message.trim())) {
-        return response.json(400, {error: "Message is invalid"});
-      }
-
-      //We also expect the sender's name with the message
-      var name = request.body.name;
-      //Let our chatroom know there was a new message
-      console.log(io.sockets.sockets.broadcast);
-      io.sockets.sockets.client['Client'].id.send({message: message, name: name});
-
-      //Looks good, let the client know
-      response.json(200, {message: "Message received"});
-
+    app.post("/getroom", function(req, res) {
+      createTable(req.body.chatstring,req.body.id,res)
     });
 
     app.get('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
@@ -463,7 +466,7 @@ function isLoggedIn(req, res, next) {
 // socket io checking connection here
 
 //========================================================================================
-var rooms = ['1','2','3','4','5'];
+// var rooms = ['1','2','3','4','5'];
 
 io.on("connection", function(socket){
 
@@ -474,9 +477,9 @@ io.on("connection", function(socket){
     and then we'll emit an event called "newConnection" with a list of all
     participants to all connected clients
   */
-  socket.emit('setup',{
-    rooms: rooms
-  });
+  // socket.emit('setup',{
+  //   rooms: rooms
+  // });
   socket.on('message',function(data){
     console.log(data);
     var newMsg = new Chat({
@@ -493,6 +496,7 @@ io.on("connection", function(socket){
   socket.on("newUser", function(data) {
     data.room = data.room;
     socket.join(data.room);
+    console.log(data);
     participants.push({id: data.id, name: data.name});
     io.sockets.emit("newConnection", {participants: participants,room:data.room});
   });

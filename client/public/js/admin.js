@@ -46,10 +46,29 @@ function getCookie(cname) {
         if (arrayb[item].startsWith("cookieName")){
             // var c=item.substr(5);
             var id = arrayb[item].substr(11);
+            // $.post('/getroom',{id:id,chatstring:})
             socket.on('connect', function () {
             sessionId = socket.io.engine.id;
             console.log(id+'Connected ' + sessionId);
-            socket.emit('newUser', {room:id,id: sessionId, name: $('#name').val()});
+            var chatstring = $("chatString").text();
+            var obj ={
+              chatstring:chatstring,
+              id:id
+            }
+            console.log(obj);
+            if(chatstring=='')
+            {
+              socket.emit('newUser',{room:null,id:sessionId,name: $('#name').val()});
+            }
+            else{
+              $.post('http://localhost:4000/getroom',obj)
+              .done(function(data){
+                console.log(data);
+              id = data;  
+              socket.emit('newUser', {room:id,id: sessionId, name: $('#name').val()});  
+              });
+            }
+            
           });
         }
     }
