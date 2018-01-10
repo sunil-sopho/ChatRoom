@@ -124,7 +124,7 @@ function getid(chatstring,id,res){
     if(results===undefined)
     {
       console.log("in if"+rooms)
-        connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values (`'+id+'` ,`'+rooms+'`)',function(err,results,fields){
+        connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values ('+id+' ,'+rooms+')',function(err,results,fields){
         console.log("in if connection"+rooms);
         rooms++;
         res.json(rooms-1);
@@ -132,7 +132,7 @@ function getid(chatstring,id,res){
     }
     else if(Object.keys(results).length==0){
       console.log("in else if"+rooms)
-        connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values (`'+id+'` ,`'+rooms+'`)',function(err,results,fields){
+        connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values ('+id+' ,'+rooms+')',function(err,results,fields){
           console.log("in else if connection"+rooms);
         rooms++;
         res.json(rooms-1);
