@@ -22,7 +22,6 @@ var configDB = require('./backend/Models/database.js');
 var http = require("http").createServer(app);
 var compression = require('compression');
 var connection = require('./backend/Models/db_model.js')
-var connection2 = require('./backend/Models/db_Model2.js')
 //var mainRoutes = require(__dirname+'/backend/routes/MainRoutes');
 var _ = require("underscore");
 var io = require("socket.io").listen(http);
@@ -108,36 +107,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-var rooms=0;
-
-function newRoom(room,chatstring){
-  var query = 'SELECT `email` from `links` where `link` = ?'
-  connection.query(query,chatstring,function(err,results,fields){
-    if(results===undefined)
-    {
-      return null;
-    }
-    else if(Object.keys(results).length===0){
-      return null;
-    }
-    else{
-      return createTable2(results[0],room);
-    }
-  });
-}
-
-function createTable2(room){
-  var query = 'Create TABLE IF NOT EXISTS `'+email+'` ( `room` INT(32) NOT NULL) ENGINE = InnoDB;'
-  connection2.query(query,function(err,results,fields){
-    connection2.query('SELECT `room` from '+email+' where `room` = ?',room,function(err,results,fields){
-      if(Object.keys(results).length==0){
-        connection2.query('INSERT INTO `'+email+'` `room` values '+room,function(err,results,fields){
-          console.log("done");
-        })
-      }
-    })
-  });
-}
+var rooms=0; 
 
 
 function createTable(chatstring,id,res){
@@ -157,7 +127,7 @@ function getid(chatstring,id,res){
         connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values ('+id+' ,'+rooms+')',function(err,results,fields){
         console.log("in if connection"+rooms);
         rooms++;
-        newRoom(rooms-1,chatstring);
+        // newRoom(rooms-1,chatstring);
         res.json(rooms-1);
       });
     }
@@ -166,19 +136,21 @@ function getid(chatstring,id,res){
         connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values ('+id+' ,'+rooms+')',function(err,results,fields){
           console.log("in else if connection"+rooms);
         rooms++;
-        newRoom(rooms-1,chatstring);
+        // newRoom(rooms-1,chatstring);
         res.json(rooms-1);
     });
     }
   else
   {
     console.log("results here"+id);
-    res.json(results[0].roomnum);
+    res.json(results[0].roomnum);  
   }
   })
 }
 /* Server routing */
+// newRoom(room,chatstring){
 
+// }
 
 //app.use('/',mainRoutes);
 
@@ -243,22 +215,7 @@ app.post("/message", function(request, response) {
         res.render('admin/admin.ejs');
     })
 
-    app.post('/listing',function(req,res){
 
-      connection2.query('CREATE TABLE IF NOT EXISTS `'+req.user.local.email+'` ( `room` INT(32) NOT NULL) ENGINE = InnoDB;',function(err,results,fields){
-        connection2.query('SELECT * from `'+req.user.local.email+'`',function(err,results,fields){
-          if(err) throw err;
-          results = parseIt(results);
-        //console.log(result);
-          return res.json(results);
-        })        
-    })
-    });
-function parseIt(rawData){
-    rawData = JSON.stringify(rawData);
-    rawData = JSON.parse(rawData);
-    return rawData;
-}
 
 
 app.use(function (req, res, next) {
@@ -304,7 +261,6 @@ app.use(function (req, res, next) {
     });
 
     app.post("/getroom", function(req, res) {
-      // console.log(req);
       createTable(req.body.chatstring,req.body.id,res)
     });
 
