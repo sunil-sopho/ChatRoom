@@ -58,7 +58,7 @@ function getCookie(cname) {
             console.log(obj);
             if(chatstring=='')
             {
-              socket.emit('newUser',{room:null,id:sessionId,name: $('#name').val()});
+              socket.emit('newUser',{room:0,id:sessionId,name: $('#name').val()});
             }
             else{
               $.post('http://localhost:4000/getroom',obj)
