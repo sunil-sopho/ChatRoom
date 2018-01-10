@@ -107,7 +107,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-var rooms=0; 
+var rooms=0;
 
 
 function createTable(chatstring,id,res){
@@ -143,7 +143,7 @@ function getid(chatstring,id,res){
   else
   {
     console.log("results here"+id);
-    res.json(results[0].roomnum);  
+    res.json(results[0].roomnum);
   }
   })
 }
