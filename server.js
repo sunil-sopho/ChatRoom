@@ -127,6 +127,7 @@ function getid(chatstring,id,res){
         connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values ('+id+' ,'+rooms+')',function(err,results,fields){
         console.log("in if connection"+rooms);
         rooms++;
+        // newRoom(rooms-1,chatstring);
         res.json(rooms-1);
       });
     }
@@ -135,6 +136,7 @@ function getid(chatstring,id,res){
         connection.query('INSERT INTO `'+chatstring+'` (`id` ,`roomnum`) values ('+id+' ,'+rooms+')',function(err,results,fields){
           console.log("in else if connection"+rooms);
         rooms++;
+        // newRoom(rooms-1,chatstring);
         res.json(rooms-1);
     });
     }
@@ -146,7 +148,9 @@ function getid(chatstring,id,res){
   })
 }
 /* Server routing */
+// newRoom(room,chatstring){
 
+// }
 
 //app.use('/',mainRoutes);
 
@@ -485,7 +489,7 @@ io.on("connection", function(socket){
     var newMsg = new Chat({
       username: data.username,
       content: data.message,
-      room: data.room.toLowerCase(),
+      room: data.room,
       created: new Date()
     });
     newMsg.save();
