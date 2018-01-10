@@ -39,7 +39,7 @@ require('./backend/Models/passport')(passport); // pass passport for configurati
 //================ Server config ================================
 
 //Server's IP address
-app.set("ipaddr", "127.0.0.1");
+app.set("ipaddr", process.env.IP );
 
 //Server's port number
 app.set("port", process.env.PORT || 4000);
@@ -211,7 +211,7 @@ app.post("/message", function(request, response) {
         });
     });
 
-    app.get('/admin',isLoggedIn,function(req,res){
+    app.get('/admin',function(req,res){
         res.render('admin/admin.ejs');
     })
 
@@ -492,9 +492,11 @@ io.on("connection", function(socket){
       room: data.room,
       created: new Date()
     });
+    console.log(newMsg);
     newMsg.save();
-    console.log("here in socket message");
-  socket.broadcast.to(data.room).emit("incomingMessage",{message:data.message})
+    console.log("here in socket message"+" "+data.room+" "+data.message);
+    io.sockets.in(data.room).emit("incomingMessage",{message:data.message});
+  // socket.broadcast.to(data.room).emit("incomingMessage",{message:data.message});
   });
 
   socket.on("newUser", function(data) {
