@@ -28,34 +28,38 @@ var _ = require("underscore");
 var io = require("socket.io").listen(http);
 var bcrypt = require('bcrypt-nodejs');
 var salt = bcrypt.genSaltSync(10);
+var User = require('./backend/Models/user1.js')
 //configuration ===============================================
 
-// configuration ===============================================================
-mongoose.connect(configDB.url); // connect to our database
 
-require('./backend/Models/passport')(passport); // pass passport for configuration
+
+
+
+// configuration ===============================================================
+// mongoose.connect(configDB.url); // connect to our database
+
+// require('./backend/Models/passport')(passport); // pass passport for configuration
 
 
 
 //================ Server config ================================
 
 //Server's IP address
-app.set("ipaddr", process.env.IP );
+// app.set("ipaddr", process.env.IP || "127.0.0.1" );
 
 //Server's port number
 app.set("port", process.env.PORT || 4000);
 
 
 
-var ChatSchema = mongoose.Schema({
-  created: Date,
-  content: String,
-  username: String,
-  room: String
-});
+// var ChatSchema = mongoose.Schema({
+//   created: Date,
+//   content: String,
+//   username: String,
+//   room: String
+// });
+// var Chat = mongoose.model('Chat',ChatSchema);
 
-
-var Chat = mongoose.model('Chat',ChatSchema);
 
 app.all('*',function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -245,8 +249,8 @@ app.post("/message", function(request, response) {
 
     app.post('/listing',function(req,res){
 
-      connection2.query('CREATE TABLE IF NOT EXISTS `'+req.user.local.email+'` ( `room` INT(32) NOT NULL) ENGINE = InnoDB;',function(err,results,fields){
-        connection2.query('SELECT * from `'+req.user.local.email+'`',function(err,results,fields){
+      connection2.query('CREATE TABLE IF NOT EXISTS `'+req.user.email+'` ( `room` INT(32) NOT NULL) ENGINE = InnoDB;',function(err,results,fields){
+        connection2.query('SELECT * from `'+req.user.email+'`',function(err,results,fields){
           if(err) throw err;
           results = parseIt(results);
         //console.log(result);
@@ -260,6 +264,30 @@ function parseIt(rawData){
     return rawData;
 }
 
+app.use(session({ 
+key:'user_sid',
+secret: 'letthegamebegins',
+resave:false,
+saveUninitialized:false,
+cookie:{
+    expires:600000
+} 
+
+}));
+app.use((req, res, next) => {
+    if (req.cookies.user_sid && !req.session.user) {
+        res.clearCookie('user_sid');        
+    }
+    next();
+});
+var sessionChecker = (req, res, next) => {
+    if (req.session.user && req.cookies.user_sid) {
+        console.log(req.session.user);
+        res.redirect('/admin');
+    } else {
+        next();
+    }    
+};
 
 app.use(function (req, res, next) {
   // check if client sent cookie
@@ -282,10 +310,14 @@ app.use(function (req, res, next) {
 });
 
     // LOGOUT ==============================
-    app.get('/logout', function(req, res) {
-        req.logout();
+app.get('/logout', (req, res) => {
+    if (req.session.user && req.cookies.user_sid) {
+        res.clearCookie('user_sid');
         res.redirect('/');
-    });
+    } else {
+        res.redirect('/auth');
+    }
+});
 
     // return a random string to be used
     var count = 0;
@@ -333,29 +365,80 @@ app.use(function (req, res, next) {
     // locally --------------------------------
         // LOGIN ===============================
         // show the login form
-        app.get('/login', function(req, res) {
-            res.render('login.ejs', { message: req.flash('loginMessage') });
+        app.route('/login')
+        .get(sessionChecker,(req, res) =>{
+            res.render('login.ejs', { message: '' });
+        })
+        .post((req,res) =>{
+          var email = req.body.email,
+              password = req.body.password;
+
+        User.findOne({ where: { email: email } }).then(function (user) {
+            if (!user) {
+                res.render('login.ejs',{
+                    user: null,
+                    message: 'User does not exit'
+                });
+            } else if (!user.validPassword(password)) {
+                res.render('login.ejs',{
+                    user: null,
+                    message: 'Oops! wrong password'
+                });
+            }
+             else {
+                req.session.user = user.dataValues;
+                res.redirect('/admin');
+            }
         });
 
+        })
+
+    app.route('/signup')
+    .get(sessionChecker, (req, res) => {
+        res.render('signup.ejs',{
+            user:req.session.user,
+            message: ''
+        });
+    })
+    .post((req, res) => {
+        User.create({
+            email: req.body.email,
+            password: req.body.password
+        })
+        .then(user => {
+            
+            req.session.user = user.dataValues;
+            checkEmail(req.session.user.email);
+            res.redirect('/admin');
+        })
+        .catch(error => {
+            console.log(error);
+            res.render('login.ejs',{
+                user: null,
+                message: 'Email id is already in use'
+            });
+        });
+    });
+
         // process the login form
-        app.post('/login', passport.authenticate('local-login', {
-            successRedirect : '/admin', // redirect to the secure profile section
-            failureRedirect : '/login', // redirect back to the signup page if there is an error
-            failureFlash : true // allow flash messages
-        }));
+        // app.post('/login', passport.authenticate('local-login', {
+        //     successRedirect : '/admin', // redirect to the secure profile section
+        //     failureRedirect : '/login', // redirect back to the signup page if there is an error
+        //     failureFlash : true // allow flash messages
+        // }));
 
         // SIGNUP =================================
         // show the signup form
-        app.get('/signup', function(req, res) {
-            res.render('signup.ejs', { message: req.flash('signupMessage') });
-        });
+        // app.get('/signup', function(req, res) {
+        //     res.render('signup.ejs', { message: req.flash('signupMessage') });
+        // });
 
-        // process the signup form
-        app.post('/signup', passport.authenticate('local-signup', {
-            successRedirect : '/admin', // redirect to the secure profile section
-            failureRedirect : '/signup', // redirect back to the signup page if there is an error
-            failureFlash : true // allow flash messages
-        }));
+        // // process the signup form
+        // app.post('/signup', passport.authenticate('local-signup', {
+        //     successRedirect : '/admin', // redirect to the secure profile section
+        //     failureRedirect : '/signup', // redirect back to the signup page if there is an error
+        //     failureFlash : true // allow flash messages
+        // }));
 
     // facebook -------------------------------
 
@@ -455,8 +538,8 @@ app.use(function (req, res, next) {
     // local -----------------------------------
     app.get('/unlink/local', isLoggedIn, function(req, res) {
         var user            = req.user;
-        user.local.email    = undefined;
-        user.local.password = undefined;
+        user.email    = undefined;
+        user.password = undefined;
         user.save(function(err) {
             res.redirect('/profile');
         });
@@ -530,14 +613,14 @@ io.on("connection", function(socket){
   // });
   socket.on('message',function(data){
     console.log(data);
-    var newMsg = new Chat({
-      username: data.username,
-      content: data.message,
-      room: data.room,
-      created: new Date()
-    });
-    console.log(newMsg);
-    newMsg.save();
+    // var newMsg = new Chat({
+    //   username: data.username,
+    //   content: data.message,
+    //   room: data.room,
+    //   created: new Date()
+    // });
+    // console.log(newMsg);
+    // newMsg.save();
     console.log("here in socket message"+" "+data.room+" "+data.message);
     io.sockets.in(data.room).emit("incomingMessage",{message:data.message});
   // socket.broadcast.to(data.room).emit("incomingMessage",{message:data.message});
