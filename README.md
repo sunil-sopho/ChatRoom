@@ -27,5 +27,5 @@ This README would normally document whatever steps are necessary to get your app
 
 ### Who do I talk to? ###
 
-* Sunil Kumar(Maintainer)
-* Other community or team contact
+* Sunil Kumar(Maintainer) github handle: sunil-sopho
+* Manish Baghel(Maintainer) github handle: manish-baghel
