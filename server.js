@@ -243,14 +243,16 @@ app.post("/message", function(request, response) {
         });
     });
 
-    app.get('/admin',function(req,res){
+    app.get('/admin',function(req,res,next){
+      if(sessionChecker1(req,res,next)){
         res.render('admin/admin.ejs');
+      }
     })
 
     app.post('/listing',function(req,res){
-
-      connection2.query('CREATE TABLE IF NOT EXISTS `'+req.user.email+'` ( `room` INT(32) NOT NULL) ENGINE = InnoDB;',function(err,results,fields){
-        connection2.query('SELECT * from `'+req.user.email+'`',function(err,results,fields){
+console.log(req.session.user.email);
+      connection2.query('CREATE TABLE IF NOT EXISTS `'+req.session.user.email+'` ( `room` INT(32) NOT NULL) ENGINE = InnoDB;',function(err,results,fields){
+        connection2.query('SELECT * from `'+req.session.user.email+'`',function(err,results,fields){
           if(err) throw err;
           results = parseIt(results);
         //console.log(result);
@@ -280,6 +282,19 @@ app.use((req, res, next) => {
     }
     next();
 });
+var sessionChecker1 = (req,res,next) => {
+  console.log(req.cookies);
+  console.log(req.session);
+  if(req.session.user) {
+    return true;
+  }
+  else
+  {
+    res.redirect('/');
+  }
+
+};
+
 var sessionChecker = (req, res, next) => {
     if (req.session.user && req.cookies.user_sid) {
         console.log(req.session.user);
@@ -408,7 +423,7 @@ app.get('/logout', (req, res) => {
         .then(user => {
             
             req.session.user = user.dataValues;
-            checkEmail(req.session.user.email);
+            // checkEmail(req.session.user.email);
             res.redirect('/admin');
         })
         .catch(error => {
