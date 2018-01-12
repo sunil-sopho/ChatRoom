@@ -14,7 +14,7 @@ var path = require('path');
 var morgan  = require('morgan');
 var app = require('./ApplicationInstance');
 var passport = require('passport');
-var mongoose = require('mongoose');
+// var mongoose = require('mongoose'); MOngo Connection failure aws
 var flash    = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session      = require('express-session');
@@ -36,7 +36,7 @@ var User = require('./backend/Models/user1.js')
 
 
 // configuration ===============================================================
-// mongoose.connect(configDB.url); // connect to our database
+// mongoose.connect(configDB.url); // connect to our database MOngo Connection failure aws
 
 // require('./backend/Models/passport')(passport); // pass passport for configuration
 
@@ -51,15 +51,16 @@ var User = require('./backend/Models/user1.js')
 app.set("port", process.env.PORT || 4000);
 
 
-
+//
 // var ChatSchema = mongoose.Schema({
 //   created: Date,
 //   content: String,
 //   username: String,
 //   room: String
-// });
-// var Chat = mongoose.model('Chat',ChatSchema);
+// }); MOngo Connection failure aws
 
+
+// var Chat = mongoose.model('Chat',ChatSchema); MOngo Connection failure aws
 
 app.all('*',function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -257,7 +258,7 @@ console.log(req.session.user.email);
           results = parseIt(results);
         //console.log(result);
           return res.json(results);
-        })        
+        })
     })
     });
 function parseIt(rawData){
@@ -266,19 +267,19 @@ function parseIt(rawData){
     return rawData;
 }
 
-app.use(session({ 
+app.use(session({
 key:'user_sid',
 secret: 'letthegamebegins',
 resave:false,
 saveUninitialized:false,
 cookie:{
     expires:600000
-} 
+}
 
 }));
 app.use((req, res, next) => {
     if (req.cookies.user_sid && !req.session.user) {
-        res.clearCookie('user_sid');        
+        res.clearCookie('user_sid');
     }
     next();
 });
@@ -301,7 +302,7 @@ var sessionChecker = (req, res, next) => {
         res.redirect('/admin');
     } else {
         next();
-    }    
+    }
 };
 
 app.use(function (req, res, next) {
@@ -421,7 +422,7 @@ app.get('/logout', (req, res) => {
             password: req.body.password
         })
         .then(user => {
-            
+
             req.session.user = user.dataValues;
             // checkEmail(req.session.user.email);
             res.redirect('/admin');
@@ -698,6 +699,6 @@ io.on("connection", function(socket){
 
 
 //Start the http server at port and IP defined before
-http.listen(app.get("port"), app.get("ipaddr"), function() {
-  console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
+http.listen(app.get("port"), function() {
+  console.log("Server up and running. Go to "+ ":" + app.get("port"));
 });
