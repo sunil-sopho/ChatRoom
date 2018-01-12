@@ -14,7 +14,7 @@ var path = require('path');
 var morgan  = require('morgan');
 var app = require('./ApplicationInstance');
 var passport = require('passport');
-var mongoose = require('mongoose');
+// var mongoose = require('mongoose'); MOngo Connection failure aws
 var flash    = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session      = require('express-session');
@@ -31,7 +31,7 @@ var salt = bcrypt.genSaltSync(10);
 //configuration ===============================================
 
 // configuration ===============================================================
-mongoose.connect(configDB.url); // connect to our database
+// mongoose.connect(configDB.url); // connect to our database MOngo Connection failure aws
 
 require('./backend/Models/passport')(passport); // pass passport for configuration
 
@@ -40,22 +40,22 @@ require('./backend/Models/passport')(passport); // pass passport for configurati
 //================ Server config ================================
 
 //Server's IP address
-app.set("ipaddr", process.env.IP );
+// app.set("ipaddr", process.env.IP || "127.0.0.1" );
 
 //Server's port number
 app.set("port", process.env.PORT || 4000);
 
 
+//
+// var ChatSchema = mongoose.Schema({
+//   created: Date,
+//   content: String,
+//   username: String,
+//   room: String
+// }); MOngo Connection failure aws
 
-var ChatSchema = mongoose.Schema({
-  created: Date,
-  content: String,
-  username: String,
-  room: String
-});
 
-
-var Chat = mongoose.model('Chat',ChatSchema);
+// var Chat = mongoose.model('Chat',ChatSchema); MOngo Connection failure aws
 
 app.all('*',function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -239,7 +239,7 @@ app.post("/message", function(request, response) {
         });
     });
 
-    app.get('/admin',function(req,res){
+    app.get('/admin',isLoggedIn,function(req,res){
         res.render('admin/admin.ejs');
     })
 
@@ -251,7 +251,7 @@ app.post("/message", function(request, response) {
           results = parseIt(results);
         //console.log(result);
           return res.json(results);
-        })        
+        })
     })
     });
 function parseIt(rawData){
@@ -600,6 +600,6 @@ io.on("connection", function(socket){
 
 
 //Start the http server at port and IP defined before
-http.listen(app.get("port"), app.get("ipaddr"), function() {
-  console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
+http.listen(app.get("port"), function() {
+  console.log("Server up and running. Go to "+ ":" + app.get("port"));
 });
