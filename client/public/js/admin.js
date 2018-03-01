@@ -61,13 +61,14 @@ function getCookie(cname) {
               socket.emit('newUser',{room:0,id:sessionId,name: $('#name').val()});
             }
             else{
-              $.post('http://localhost:4000/getroom',obj)
+              $.post('http://heyu.fr.openode.io/getroom',obj)
               .done(function(data){
                 console.log(data);
               id = data;
               socket.emit('newUser', {room:id,id: sessionId, name: $('#name').val()});
-              });
               id = data + '_' + Math.random().toString(36).substr(2, 9);
+              });
+
               // $(".sideBar").prepend(
               //   '<div class="row sideBar-body">'+
               //     '<div class="col-sm-3 col-xs-3 sideBar-avatar">'+
@@ -132,7 +133,7 @@ function getCookie(cname) {
   */
   var room;
   socket.on('newConnection', function (data) {
-    console.log("room switching initiated");
+    console.log("room switching initiated with room no."+data.room);
     room = data.room;
     var id = room + '_' + Math.random().toString(36).substr(2, 9);
     // $(".sideBar").prepend(

@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link href="/lib/css/emoji.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
@@ -137,7 +138,7 @@
               <i class="fa fa-smile-o fa-2x"></i>
             </div>
             <div class="col-sm-10 col-xs-10 reply-main">
-              <textarea rows="1" cols="50" placeholder="Share something!" maxlength="200" id="outgoingMessage"></textarea>
+              <textarea rows="1" cols="50" placeholder="Share something!" maxlength="200" id="outgoingMessage" data-emojiable="true"></textarea>
             </div>
             <div class="col-sm-1 col-xs-1 reply-send mx-auto">
               <i class="fa fa-paper-plane fa-2x" aria-hidden="true" id="send"></i>
@@ -168,5 +169,9 @@
         $(".sideBlock").toggleClass("sideBlock-active");
       });
     </script>
+    <script src="/lib/js/config.js"></script>
+    <script src="/lib/js/util.js"></script>
+    <script src="/lib/js/jquery.emojiarea.js"></script>
+    <script src="/lib/js/emoji-picker.js"></script>
   </body>
 </html>

@@ -7,14 +7,14 @@
     // port     : process.env.RDS_PORT
     // });
 var connection = mysql.createConnection({
-host     : 'localhost',//process.env.RDS_HOSTNAME,
-user     : 'root',//process.env.RDS_USERNAME,
-password : 'PASSWORD',// process.env.RDS_PASSWORD,
-database : 'chatRoom',
+host     : 'sql12.freesqldatabase.com',//'localhost',//process.env.RDS_HOSTNAME,
+user     : 'sql12224028',//'root',//process.env.RDS_USERNAME,
+password : 'jaKPLGcNWy',//'PASSWORD',// process.env.RDS_PASSWORD,
+database : 'sql12224028'//'chatRoom',
 // port     : process.env.RDS_PORT
 });
 
-    
+
     connection.connect(function(err){
     if(!err) {
         console.log("Database is connected");

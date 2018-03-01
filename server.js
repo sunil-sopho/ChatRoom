@@ -21,7 +21,7 @@ var session      = require('express-session');
 var configDB = require('./backend/Models/database.js');
 var http = require("http").createServer(app);
 var compression = require('compression');
-var connection = require('./backend/Models/db_model.js')
+// var connection = require('./backend/Models/db_model.js')
 //var mainRoutes = require(__dirname+'/backend/routes/MainRoutes');
 var _ = require("underscore");
 var io = require("socket.io").listen(http);
@@ -39,7 +39,7 @@ require('./backend/Models/passport')(passport); // pass passport for configurati
 //================ Server config ================================
 
 //Server's IP address
-app.set("ipaddr", "127.0.0.1");
+// app.set("ipaddr", "127.0.0.1");
 
 //Server's port number
 app.set("port", process.env.PORT || 4000);
@@ -146,6 +146,11 @@ function getid(chatstring,id,res){
     res.json(results[0].roomnum);
   }
   })
+}
+
+function getRoomNo(chatstring){
+  // extract room no from String
+  return chatstring;
 }
 /* Server routing */
 // newRoom(room,chatstring){
@@ -256,6 +261,7 @@ app.use(function (req, res, next) {
     var chatrouter = require('express').Router();
     app.use('/randomChats/',chatrouter);
     chatrouter.route('/:chatstring').get(function(req,res){
+       roomNo = getRoomNo(req.params.chatstring);
        res.render('anonymous/anonymous.ejs',{chatstring:req.params.chatstring});
       // res.send(req.params.chatstring);
     });
@@ -554,6 +560,6 @@ io.on("connection", function(socket){
 
 
 //Start the http server at port and IP defined before
-http.listen(app.get("port"), app.get("ipaddr"), function() {
-  console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
+http.listen(app.get("port"), function() {
+  console.log("Server up and running. Go to http://" + "heyU" + ":" + app.get("port"));
 });
