@@ -15,8 +15,6 @@ function timeNow() {
 }
 function init() {
   var globalId = "";
- // var app = require('../../../ApplicationInstance');
-//  var io = require("../../../node_modules/socket.io").listen(app);
 
   var serverBaseUrl = document.domain;
 
@@ -58,13 +56,14 @@ function getCookie(cname) {
             console.log(obj);
             if(chatstring=='')
             {
-              socket.emit('newUser',{room:0,id:sessionId,name: $('#name').val()});
+              socket.emit('newUser',{room:1,id:sessionId,name: $('#name').val()});
             }
             else{
               $.post('http://heyu.fr.openode.io/getroom',obj)
               .done(function(data){
                 console.log(data);
               id = data;
+              console.log(id);
               socket.emit('newUser', {room:id,id: sessionId, name: $('#name').val()});
               id = data + '_' + Math.random().toString(36).substr(2, 9);
               });
@@ -92,7 +91,6 @@ function getCookie(cname) {
               // );
               // $(".sideBar-body:first").attr('id',id);
             }
-
           });
         }
     }
@@ -131,33 +129,33 @@ function getCookie(cname) {
  the participants section and display the connected clients.
  Note we are assigning the sessionId as the span ID.
   */
-  var room;
+  var room=0;
   socket.on('newConnection', function (data) {
     console.log("room switching initiated with room no."+data.room);
     room = data.room;
     var id = room + '_' + Math.random().toString(36).substr(2, 9);
-    // $(".sideBar").prepend(
-    //   '<div class="row sideBar-body">'+
-    //     '<div class="col-sm-3 col-xs-3 sideBar-avatar">'+
-    //       '<div class="avatar-icon">'+
-    //         '<img src="https://bootdey.com/img/Content/avatar/avatar1.png">'+
-    //       '</div>'+
-    //     '</div>'+
-    //     '<div class="col-sm-9 col-xs-9 sideBar-main">'+
-    //       '<div class="row">'+
-    //         '<div class="col-sm-8 col-xs-8 sideBar-name">'+
-    //           '<span class="name-meta">'+'John Doe'+
-    //         '</span>'+
-    //         '</div>'+
-    //         '<div class="col-sm-4 col-xs-4 pull-right sideBar-time">'+
-    //           '<span class="time-meta pull-right">18:18'+
-    //         '</span>'+
-    //         '</div>'+
-    //       '</div>'+
-    //     '</div>'+
-    //   '</div>'
-    // );
-    // $(".sideBar-body:first").attr('id',id);
+    $(".sideBar").prepend(
+      '<div class="row sideBar-body">'+
+        '<div class="col-sm-3 col-xs-3 sideBar-avatar">'+
+          '<div class="avatar-icon">'+
+            '<img src="https://bootdey.com/img/Content/avatar/avatar1.png">'+
+          '</div>'+
+        '</div>'+
+        '<div class="col-sm-9 col-xs-9 sideBar-main">'+
+          '<div class="row">'+
+            '<div class="col-sm-8 col-xs-8 sideBar-name">'+
+              '<span class="name-meta">'+'John Doe'+
+            '</span>'+
+            '</div>'+
+            '<div class="col-sm-4 col-xs-4 pull-right sideBar-time">'+
+              '<span class="time-meta pull-right">18:18'+
+            '</span>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'
+    );
+    $(".sideBar-body:first").attr('id',id);
     globalId = id;
   });
 
@@ -226,8 +224,11 @@ function getCookie(cname) {
  whatever message we have in our textarea
   */
   function sendMessage() {
+    console.log("In send Message()");
     var outgoingMessage = $('#outgoingMessage').val();
+    console.log($('#outgoingMessage').val());
     var name = $('#name').val();
+    console.log(room);
     socket.emit('message',{message:outgoingMessage,room:room});
     $('#conversation').append(
       '<div class="row message-body">'+
@@ -251,11 +252,13 @@ function getCookie(cname) {
  is something to share
   */
   function outgoingMessageKeyDown(event) {
+    console.log("Hit Enter");
     if (event.which == 13) {
       event.preventDefault();
       if ($('#outgoingMessage').val().trim().length <= 0) {
         return;
       }
+      console.log("Sending Message" );
       sendMessage();
       $('#outgoingMessage').val('');
     }
@@ -289,9 +292,38 @@ function getCookie(cname) {
     $(this).addClass('selected');
     $(this).attr('id',globalId);
     var roomValue = $(this).attr('id').substr(0,$(this).attr('id').indexOf('_'));
+    console.log(roomValue);
     socket.emit('roomChange',{room:roomValue});
     clearChat();
   });
+
+  $.post('http://localhost:4000/listing',function(data){
+          for(i=0;i<Object.keys(data).length;i++){
+            $(".sideBar").prepend(
+      '<div class="row sideBar-body">'+
+        '<div class="col-sm-3 col-xs-3 sideBar-avatar">'+
+          '<div class="avatar-icon">'+
+            '<img src="https://bootdey.com/img/Content/avatar/avatar1.png">'+
+          '</div>'+
+        '</div>'+
+        '<div class="col-sm-9 col-xs-9 sideBar-main">'+
+          '<div class="row">'+
+            '<div class="col-sm-8 col-xs-8 sideBar-name">'+
+              '<span class="name-meta">'+'John Doe '+ Math.random().toString(36).substr(2, 9) +
+            '</span>'+
+            '</div>'+
+            '<div class="col-sm-4 col-xs-4 pull-right sideBar-time">'+
+              '<span class="time-meta pull-right">18:18'+
+            '</span>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>');
+          }
+
+        });
+
+
 }
 
 $(document).ready(init);
